@@ -1,18 +1,18 @@
-package main  
+package main
 
-import (  
- "fmt"  
- "log"  
- "net/http"  
- "os"  
- "os/exec"  
+import (
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"os/exec"
 
- "github.com/joho/godotenv"  
- "github.com/labstack/echo/v4"  
- "github.com/labstack/echo/v4/middleware"  
-)  
+	"github.com/joho/godotenv"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+)
 
-// RepositoryConfig represents the configuration for repository pull  
+// RepositoryConfig represents the configuration for repository pull
 type RepositoryConfig struct {  
  Path   string `json:"path" validate:"required"`  
  Branch string `json:"branch,omitempty"`  
@@ -97,6 +97,14 @@ func main() {
  if err := godotenv.Load(); err != nil {  
   log.Println("No .env file found")  
  }  
+
+ // Check for required environment variables
+ requiredVars := []string{"REPO_MANAGEMENT_API_KEY", "PORT"}
+ for _, v := range requiredVars {
+  if os.Getenv(v) == "" {
+   log.Fatalf("%s environment variable is required", v)
+  }
+ } 
 
  // Create Echo instance  
  e := echo.New()  
